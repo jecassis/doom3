@@ -1,4 +1,4 @@
-(For information about this project on GitHub, see http://ttimo.github.com/doom3.gpl/)
+(For information about this project on GitHub, see https://github.com/TTimo/doom3.gpl)
 
 Doom 3 GPL source release
 =========================
@@ -19,30 +19,63 @@ covered by the original EULA and must be obeyed as usual.
 
 You must patch the game to the latest version.
 
-Note that Doom 3 and Doom 3: Resurrection of Evil are available from the Steam store at
-http://store.steampowered.com/app/9050/
-http://store.steampowered.com/app/9070/
+Note that Doom 3 and Doom 3: Resurrection of Evil are available from the Steam
+store at:
+  - http://store.steampowered.com/app/9050/
+  - http://store.steampowered.com/app/9070/
 
 Other platforms, updated source code, security issues:
 ------------------------------------------------------
 
 If you have obtained this source code several weeks after the time of release,
-it is likely that you can find modified and improved
-versions of the engine in various open source projects across the internet.
-Depending what is your interest with the source code, those may be a better
-starting point.
+it is likely that you can find modified and improved versions of the engine in
+various open source projects across the internet.  Depending what is your
+interest with the source code, those may be a better starting point.
 
 Compiling on win32:
 -------------------
 
-A project file for Microsoft Visual Studio 2010 is provided in neo\doom.sln
+A project file for Microsoft Visual Studio 2010 is provided in "neo\doom.sln".
 
 Unfortunately, Microsoft Visual Studio 2010 Express Edition (e.g. the free release)
 will not be able to successfully compile the source, because 32 bit MFC is required.
 
-You will need the Microsoft DirectX SDK installed as well.
+You will need the Microsoft DirectX SDK installed as well from here:
+https://www.microsoft.com/en-us/download/details.aspx?id=6812
+
 If it does not reside in "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)"
 you will need to update the project files accordingly.
+
+Additional notes for Visual Studio 2022:
+  - The repository has been ported to work on Windows 10/11 SDK and Visual Studio 2022
+(Platform Toolset v143), including the aforementioned "doom.sln".
+  - In the Visual Studio Installer, select the following individual components:
+    * "MSVC v143 C++ x64/x86 build tools"
+    * "C++ MFC for latest v143 build tools (x86 & x64)" (MFC depends on ATL)
+    * "C++ ATL for latest v143 build tools (x86 & x64)"
+    * "Windows 10 SDK" or ""Windows 11 SDK"
+  - After installing the June 2010 Microsoft DirectX SDK follow the instructions here to
+delete the headers and libraries duplicated by the Windows 10/11 SDK:
+https://walbourn.github.io/the-zombie-directx-sdk/
+  - Set the Microsoft DirectX SDK to an environment variable called `DXSDK_DIR`
+(i.e., DXSDK_DIR="C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\").
+  - For debugging in the IDE, update the "neo\doomdll.vcxproj.user" with the directory
+containing the game assets. Default is:
++set fs_basepath "C:\Program Files (x86)\Steam\steamapps\common\doom 3"
+
+Reasons for modifications/patches:
+  - Visual Studio 2022 builds as C++14 by default. `noexcept` on typedefs is invalid
+prior to C++17. Due to contents in "MAPI.h" from the Windows 10 SDK, set `WIN_NOEXCEPT`
+macro empty. This not needed if using the Windows 11 SDK, as it used this same workaround.
+  - The resulting DLL for "Game-d3xp" project is renamed to `gamex86-d3xp.dll` to avoid
+ovewriting the "Game" project DLL. Note that "Game-d3xp" is not built by default.
+  - Defined `_XKEYCHECK_H` to prevent "xkeyword.h" error causing a failed build:
+"C1189: The C++ Standard Library forbids macroizing keywords. Enable warning C4005 to fine the forbidden macro."
+  - "snd_system.cpp" has been patched to causing a failed build:
+"C2664: 'ALenum (ALubyte *)' : cannot convert argument 1 from 'const char [16]' to 'ALubyte *'"
+  - `ID_ENFORCE_KEY` is set to `0` to turn off CD Key checking.
+  - Fixed macro spacing warnings.
+  - Updated usage of `GetFilePtr()` in "FileSystem.cpp".
 
 Compiling on GNU/Linux x86:
 ---------------------------
@@ -51,7 +84,7 @@ The build system on GNU/Linux is based on SCons: http://www.scons.org/
 Issue the scons command in the neo/ folder.
 
 Compiling on MacOS X:
----------------------------
+---------------------
 
 XCode 3.2 project is under neo/sys/osx/
 
@@ -59,11 +92,11 @@ Back End Rendering of Stencil Shadows:
 --------------------------------------
 
 The Doom 3 GPL source code release does not include functionality enabling rendering
-of stencil shadows via the “depth fail” method, a functionality commonly known as 
+of stencil shadows via the "depth fail" method, a functionality commonly known as 
 "Carmack's Reverse".
 
 MayaImport:
----------------------------
+-----------
 
 The code for our Maya export plugin is included, if you are a Maya licensee
 you can obtain the SDK from Autodesk.
@@ -72,17 +105,23 @@ you can obtain the SDK from Autodesk.
 LICENSE
 =======
 
-See COPYING.txt for the GNU GENERAL PUBLIC LICENSE
+See COPYING.txt for the GNU General Public License
 
-ADDITIONAL TERMS:  The Doom 3 GPL Source Code is also subject to certain additional terms. You should have received a copy of these additional terms immediately following the terms and conditions of the GNU GPL which accompanied the Doom 3 Source Code.  If not, please request a copy in writing from id Software at id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
+ADDITIONAL TERMS:  The Doom 3 GPL Source Code is also subject to certain additional terms.
+                   You should have received a copy of these additional terms immediately
+                   following the terms and conditions of the GNU GPL which accompanied the
+                   Doom 3 Source Code.  If not, please request a copy in writing from
+                   id Software at id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
 
-EXCLUDED CODE:  The code described below and contained in the Doom 3 GPL Source Code release is not part of the Program covered by the GPL and is expressly excluded from its terms.  You are solely responsible for obtaining from the copyright holder a license for such code and complying with the applicable license terms.
+EXCLUDED CODE:  The code described below and contained in the Doom 3 GPL Source Code release
+                is not part of the Program covered by the GPL and is expressly excluded from
+                its terms.  You are solely responsible for obtaining from the copyright holder
+                a license for such code and complying with the applicable license terms.
 
 Curl library
 ---------------------------------------------------------------------------
-lines	file(s)
-		neo/curl/*, neo/curl/README
-		
+neo/curl/*
+
 COPYRIGHT AND PERMISSION NOTICE
 
 Copyright (c) 1996 - 2004, Daniel Stenberg, <daniel@haxx.se>.
@@ -138,9 +177,7 @@ better release of the library.
 OggVorbis 
 ---------------------------------------------------------------------------
 neo/sound/OggVorbis/*
-neo/sound/OggVorbis/ogg/README
-neo/sound/OggVorbis/vorbis/README
-			
+
 Copyright (c) 2002, Xiph.org Foundation
 
 Redistribution and use in source and binary forms, with or without
@@ -219,14 +256,14 @@ neo/openal/osx/*
 
 Base64 implementation
 ---------------------------------------------------------------------------
-lines	file(s)
-234		neo/idlib/Base64.cpp
+lines   file(s)
+234     neo/idlib/Base64.cpp
 
 Copyright (c) 1996 Lars Wirzenius.  All rights reserved.
 
 June 14 2003: TTimo <ttimo@idsoftware.com>
-	modified + endian bug fixes
-	http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=197039
+    modified + endian bug fixes
+    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=197039
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -251,11 +288,11 @@ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
-
 IO on .zip files using portions of zlib
 ---------------------------------------------------------------------------
-lines	file(s)
-4471	src/framework/Unzip.cpp
+lines   file(s)
+4471    src/framework/Unzip.cpp
+
 Copyright (C) 1998 Gilles Vollant
 zlib is Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
 
@@ -278,7 +315,8 @@ zlib is Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
 MD4 Message-Digest Algorithm
 -----------------------------------------------------------------------------
 lines   file(s)
-260		neo/idlib/hashing/MD4.cpp
+260     neo/idlib/hashing/MD4.cpp
+
 Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All
 rights reserved.
 
@@ -302,8 +340,9 @@ documentation and/or software.
 
 MD5 Message-Digest Algorithm
 -----------------------------------------------------------------------------
-lines	file(s)
-273		neo/idlib/hashing/MD5.cpp
+lines   file(s)
+273     neo/idlib/hashing/MD5.cpp
+
 This code implements the MD5 message-digest algorithm.
 The algorithm is due to Ron Rivest.  This code was
 written by Colin Plumb in 1993, no copyright is claimed.
@@ -311,56 +350,54 @@ This code is in the public domain; do with it what you wish.
 
 CRC32 Checksum
 -----------------------------------------------------------------------------
-lines	file(s)
-168		neo/idlib/hashing/CRC32.cpp
+lines   file(s)
+168     neo/idlib/hashing/CRC32.cpp
+
 Copyright (C) 1995-1998 Mark Adler
 
 OpenGL headers
 ---------------------------------------------------------------------------
-lines	file(s)
-5920	neo/renderer/glext.h
-613		neo/renderer/wglext.h
+lines   file(s)
+5920    neo/renderer/glext.h
+613     neo/renderer/wglext.h
 
-/*
-** License Applicability. Except to the extent portions of this file are
-** made subject to an alternative license as permitted in the SGI Free
-** Software License B, Version 1.1 (the "License"), the contents of this
-** file are subject only to the provisions of the License. You may not use
-** this file except in compliance with the License. You may obtain a copy
-** of the License at Silicon Graphics, Inc., attn: Legal Services, 1600
-** Amphitheatre Parkway, Mountain View, CA 94043-1351, or at:
-** 
-** http://oss.sgi.com/projects/FreeB
-** 
-** Note that, as provided in the License, the Software is distributed on an
-** "AS IS" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS
-** DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND
-** CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
-** PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-** 
-** Original Code. The Original Code is: OpenGL Sample Implementation,
-** Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
-** Inc. The Original Code is Copyright (c) 1991-2002 Silicon Graphics, Inc.
-** Copyright in any portions created by third parties is as indicated
-** elsewhere herein. All Rights Reserved.
-** 
-** Additional Notice Provisions: This software was created using the
-** OpenGL(R) version 1.2.1 Sample Implementation published by SGI, but has
-** not been independently verified as being compliant with the OpenGL(R)
-** version 1.2.1 Specification.
-*/
+License Applicability. Except to the extent portions of this file are
+made subject to an alternative license as permitted in the SGI Free
+Software License B, Version 1.1 (the "License"), the contents of this
+file are subject only to the provisions of the License. You may not use
+this file except in compliance with the License. You may obtain a copy
+of the License at Silicon Graphics, Inc., attn: Legal Services, 1600
+Amphitheatre Parkway, Mountain View, CA 94043-1351, or at:
+
+http://oss.sgi.com/projects/FreeB
+
+Note that, as provided in the License, the Software is distributed on an
+"AS IS" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS
+DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND
+CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
+PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+Original Code. The Original Code is: OpenGL Sample Implementation,
+Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
+Inc. The Original Code is Copyright (c) 1991-2002 Silicon Graphics, Inc.
+Copyright in any portions created by third parties is as indicated
+elsewhere herein. All Rights Reserved.
+
+Additional Notice Provisions: This software was created using the
+OpenGL(R) version 1.2.1 Sample Implementation published by SGI, but has
+not been independently verified as being compliant with the OpenGL(R)
+version 1.2.1 Specification.
 
 NV-CONTROL X Extension
 ---------------------------------------------------------------------------
 neo/sys/linux/libXNVCtrl/*
+
 Copyright NVIDIA Corporation
 
 ExtUtil.h
 ---------------------------------------------------------------------------
 neo/sys/linux/extutil.h
-/*
- * $Xorg: extutil.h,v 1.4 2001/02/09 02:03:24 xorgcvs Exp $
- *
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -382,58 +419,47 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Except as contained in this notice, the name of The Open Group shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
- *
- * Author:  Jim Fulton, MIT The Open Group
- * 
- *                     Xlib Extension-Writing Utilities
- *
- * This package contains utilities for writing the client API for various
- * protocol extensions.  THESE INTERFACES ARE NOT PART OF THE X STANDARD AND
- * ARE SUBJECT TO CHANGE!
- */
 
 OSS headers
 ---------------------------------------------------------------------------
 neo/sys/linux/oss/*
+
 Copyright by 4Front Technologies 1993-2004
 
 Brandelf utility
 ---------------------------------------------------------------------------
-lines	file(s)
-225		neo/sys/linux/setup/brandelf.c
+lines   file(s)
+225     neo/sys/linux/setup/brandelf.c
 
-/*-
- * Copyright (c) 1996 Søren Schmidt
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer
- *    in this position and unchanged.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software withough specific prior written permission
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $FreeBSD: src/usr.bin/brandelf/brandelf.c,v 1.16 2000/07/02 03:34:08 imp Exp $
- */
+Copyright (c) 1996 SÃ¸ren Schmidt
+All rights reserved.
 
-makeself - Make self-extractable archives on Unix
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer
+   in this position and unchanged.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+   derived from this software withough specific prior written permission
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+makeself
 --------------------------------------------------------------------------- 
-neo/sys/linux/setup/makeself/*, neo/sys/linux/setup/makeself/README
-Copyright (c) Stéphane Peter
-Licensing: GPL v2
+neo/sys/linux/setup/makeself/*
+
+Copyright (c) StÃ©phane Peter
+Licensing: GPLv2
